@@ -1,0 +1,30 @@
+- name: install packages
+  become: true
+  apt: name={{ item }} state=latest update_cache=true cache_valid_time=3600
+  with_items:
+    - openssh-server
+    - autossh
+    - apticron
+    - ufw
+    - xtail
+    - rsync
+    - pastebinit
+    - vim-nox
+    - htop
+    - nmap
+    - sysstat
+    - dnsutils
+    - git
+    - subversion
+    - screen
+    - tree
+    - ntp
+    - ntpdate
+    #- imagemagick
+    #- mcrypt
+    #- linuxlogo
+    - screenfetch
+    #- memcached
+    #- snmp
+    #- libruby
+  tags: default_packages

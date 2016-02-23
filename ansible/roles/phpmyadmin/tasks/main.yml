@@ -1,0 +1,26 @@
+---
+- name: create database structure
+  file: path=/home/{{ ansible_user }}/workspace/admin/db state=directory
+  tags: phpmyadmin
+
+- name: download package
+  unarchive: src=https://files.phpmyadmin.net/phpMyAdmin/{{ pma_version }}/phpMyAdmin-{{ pma_version }}-{{ pma_language }}.tar.gz dest=/home/{{ ansible_user }}/workspace/admin/db copy=no
+  tags: phpmyadmin
+
+- name: link to htdocs
+  file: src=/home/{{ ansible_user }}/workspace/admin/db/phpMyAdmin-{{ pma_version }}-{{ pma_language }} dest=/home/{{ ansible_user }}/workspace/admin/db/htdocs state=link
+  tags: phpmyadmin
+
+- name: lookup config
+  stat: path=/home/{{ ansible_user }}/workspace/admin/db/htdocs/config.inc.php
+  register: config_inc_php
+  tags: phpmyadmin
+
+- name: create config
+  copy: remote_src=yes src=/home/{{ ansible_user }}/workspace/admin/db/htdocs/config.sample.inc.php dest=/home/{{ ansible_user }}/workspace/admin/db/htdocs/config.inc.php
+  when: config_inc_php.stat.exists == false
+  tags: phpmyadmin
+
+- name: create blowfish_secret
+  lineinfile: dest=/home/{{ ansible_user }}/workspace/admin/db/htdocs/config.inc.php regexp="$cfg['blowfish_secret'] =.*" line="$cfg['blowfish_secret'] = 'vagrant'" state=present backrefs=yes
+  tags: phpmyadmin

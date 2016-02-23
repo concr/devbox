@@ -1,0 +1,50 @@
+---
+- name: create ~/bin directory
+  file: path=/home/{{ ansible_user }}/bin state=directory
+  tags: configure_user
+
+- name: create ~/opt directory
+  file: path=/home/{{ ansible_user }}/opt state=directory
+  tags: configure_user
+
+- name: create ~/var directory
+  file: path=/home/{{ ansible_user }}/var state=directory
+  tags: configure_user
+
+- name: create ~/workspace directory
+  file: path=/home/{{ ansible_user }}/workspace state=directory
+  tags: configure_user
+
+- name: link ~/workspace to ~/var/www
+  file: src=/home/{{ ansible_user }}/workspace dest=/home/{{ ansible_user }}/var/www state=link
+  tags: configure_user
+
+- name: copy .bashrc
+  copy: src=bashrc dest=/home/{{ ansible_user }}/.bashrc
+  tags: configure_user
+
+- name: copy .vimrc
+  copy: src=vimrc dest=/home/{{ ansible_user }}/.vimrc
+  tags: configure_user
+
+- name: install createworkspace command
+  copy: src=createworkspace.sh dest=/home/{{ ansible_user }}/bin/createworkspace mode=0755
+  tags: configure_user
+
+- name: create default htdocs structure
+  file: path=/home/{{ ansible_user }}/workspace{{ item }}/htdocs state=directory
+  with_items:
+    - /admin/info
+    - /admin/bench
+    - /website/test
+    - /project/test
+  tags: configure_user
+
+- name: install default htdocs indexes
+  copy: src={{ item.src }} dest=/home/{{ ansible_user }}/workspace{{ item.path }}/htdocs/index.php
+  with_items:
+    - { src: "phpinfo.php", path: "/admin/info" }
+    - { src: "bench.php", path: "/admin/bench" }
+    - { src: "itworks.php", path: "/website/test" }
+    - { src: "itworks.php", path: "/project/test" }
+  tags: configure_user

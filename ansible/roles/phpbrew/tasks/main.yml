@@ -1,0 +1,53 @@
+---
+- name: install php5-cli
+  become: true
+  apt: name={{ item }} state=latest update_cache=true cache_valid_time=3600
+  with_items:
+    - php5-cli
+  tags: phpbrew
+
+- name: download phpbrew
+  get_url: url=https://github.com/phpbrew/phpbrew/raw/master/phpbrew dest=/home/{{ ansible_user }}/bin/phpbrew mode=0755
+  tags: phpbrew
+
+- name: init, self-update, update
+  shell: /home/{{ ansible_user }}/bin/phpbrew {{ item }} creates=/home/{{ ansible_user }}/.phpbrew
+  with_items:
+    - init
+    - self-update
+    - update
+  tags: phpbrew
+
+- name: install compile packages
+  become: true
+  apt: name={{ item }} state=latest update_cache=true cache_valid_time=3600
+  with_items:
+    - build-essential
+    - libssl-dev
+    - libxml2-dev
+    - libbz2-dev
+    - libmcrypt-dev
+    - libreadline-dev
+    - libxslt1-dev
+  tags: phpbrew
+
+- name: compiling (ATTENTION, it takes a while ...)
+  shell: /home/{{ ansible_user }}/bin/phpbrew install php-{{ item }} +default +mb +fpm +debug +mysql +sqlite +pdo creates=/home/{{ ansible_user }}/.phpbrew/build/php-{{ item }}
+  with_items:
+    - "{{ php5 }}"
+    - "{{ php7 }}"
+  tags: phpbrew
+
+- name: set timezones
+  lineinfile: dest=/home/{{ ansible_user}}/.phpbrew/php/php-{{ item }}/etc/php.ini regexp=".*date.timezone =.*" line="date.timezone = Europe/Berlin" state=present backrefs=yes
+  with_items:
+    - "{{ php5 }}"
+    - "{{ php7 }}"
+  tags: phpbrew
+
+# only needed for php7
+- name: activating pools
+  copy: remote_src=yes src=/home/{{ ansible_user }}/.phpbrew/php/php-{{ item }}/etc/php-fpm.d/www.conf.default dest=/home/{{ ansible_user }}/.phpbrew/php/php-{{ item }}/etc/php-fpm.d/www.conf
+  with_items:
+    - "{{ php7 }}"
+  tags: phpbrew

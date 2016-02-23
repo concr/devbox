@@ -1,0 +1,4 @@
+---
+- name: restart service
+  become: true
+  service: name=nfs-kernel-server state=restarted

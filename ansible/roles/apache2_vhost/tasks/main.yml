@@ -1,0 +1,30 @@
+---
+- name: create php-fpm vhost
+  become: true
+  template: src=apache2_vhost.conf dest=/etc/apache2/sites-available/fpm.conf
+  vars: { port: "{{ fpm_port }}", fcgi: 9000 }
+  notify:
+    - restart apache2 service
+  tags: apache2_vhost
+
+- name: enable php-fpm vhost
+  become: true
+  shell: a2ensite fpm creates=/etc/apache2/sites-enabled/fpm.conf
+  notify:
+    - restart apache2 service
+  tags: apache2_vhost
+
+- name: create hhvm vhost
+  become: true
+  template: src=apache2_vhost.conf dest=/etc/apache2/sites-available/hhvm.conf
+  vars: { port: "{{ hhvm_port }}", fcgi: 9001 }
+  notify:
+    - restart apache2 service
+  tags: apache2_vhost
+
+- name: enable hhvm vhost
+  become: true
+  shell: a2ensite hhvm creates=/etc/apache2/sites-enabled/hhvm.conf
+  notify:
+    - restart apache2 service
+  tags: apache2_vhost

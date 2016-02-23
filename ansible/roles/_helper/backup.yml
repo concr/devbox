@@ -1,0 +1,11 @@
+- name: lookup backup
+  stat: path="{{ file }}.bak"
+  register: backup
+
+- name: make backup
+  copy: remote_src=yes src="{{ file }}" dest="{{ file }}.bak"
+  when: backup.stat.exists == false
+
+- name: remove original
+  file: path="{{ file }}" state=absent
+  when: backup.stat.exists == false and delete == true

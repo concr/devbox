@@ -1,0 +1,63 @@
+- name: install php5-fpm packages and modules
+  become: true
+  apt: name={{ item }} state=latest update_cache=true cache_valid_time=3600
+  with_items:
+    - php5-fpm
+    - php5-cli
+    - php5-common
+    - php5-curl
+    #- php5-intl
+    - php5-json
+    #- php5-gd
+    #- php5-imagick
+    #- php5-imap
+    #- php5-memcache
+    #- php5-memcached
+    - php5-mcrypt
+    - php5-mysql
+    #- php5-recode
+    #- php5-snmp
+    - php5-sqlite
+    - php5-tidy
+    #- php5-xcache
+    - php5-xdebug
+    #- php5-xmlrpc
+    #- php5-xsl
+    #- php-pear
+    #- php-auth
+  tags: php5-fpm
+
+- name: configure php5-fpm host and port
+  become: true
+  replace: dest=/etc/php5/fpm/pool.d/www.conf regexp="listen =.*" replace="listen = 127.0.0.1:9000"
+  notify:
+    - restart php5-fpm service
+  tags: php5-fpm
+
+- name: configure php5-fpm uid
+  become: true
+  replace: dest=/etc/php5/fpm/pool.d/www.conf regexp="user =.*" replace="user = vagrant"
+  notify:
+    - restart php5-fpm service
+  tags: php5-fpm
+
+- name: configure php5-fpm gid
+  become: true
+  replace: dest=/etc/php5/fpm/pool.d/www.conf regexp="group =.*" replace="group = vagrant"
+  notify:
+    - restart php5-fpm service
+  tags: php5-fpm
+
+- name: create vhost for php5-fpm
+  become: true
+  template: src=php5-fpm.vhost.conf dest=/etc/apache2/sites-available/php5-fpm.{{ inventory_hostname }}.conf
+  notify:
+    - restart apache2 service
+  tags: php5-fpm
+
+- name: enable vhost for php5-fpm
+  become: true
+  shell: a2ensite php5-fpm.{{ inventory_hostname }} creates=/etc/apache2/sites-enabled/php5-fpm.{{ inventory_hostname }}.conf
+  notify:
+    - restart apache2 service
+  tags: php5-fpm

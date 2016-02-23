@@ -1,0 +1,28 @@
+---
+- name: install mysql packages
+  become: true
+  apt: name={{ item }} state=latest update_cache=true cache_valid_time=3600
+  with_items:
+    - mysql-server
+    - mysql-client
+  tags: mysql
+
+- name: setup mysql root
+  shell: mysqladmin -u root password root
+  failed_when: false
+  changed_when: false
+  tags: mysql
+
+- name: setup mysql user
+  shell: mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO {{ ansible_user }}@{{ item }} IDENTIFIED BY '{{ ansible_user }}'"
+  with_items:
+    - localhost
+    - 127.0.0.1
+  failed_when: false
+  changed_when: false
+  tags: mysql
+
+- name: check mysql service state
+  become: true
+  service: name=mysql state=started enabled=yes
+  tags: mysql

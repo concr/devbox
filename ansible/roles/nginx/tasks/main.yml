@@ -1,0 +1,42 @@
+---
+- name: adding nginx apt-key
+  become: true
+  apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
+  register: nginx_key
+  tags: nginx
+
+- name: adding nginx sources
+  become: true
+  apt_repository: repo="deb http://nginx.org/packages/mainline/debian/ jessie nginx" state=present update_cache=yes
+  tags: nginx
+
+- name: install nginx packages
+  become: true
+  apt: name={{ item }} state=latest
+  with_items:
+    - nginx
+  tags: nginx
+
+- name: backup nginx config
+  become: true
+  include: ../../_helper/backup.yml
+  vars: { file: /etc/nginx/nginx.conf, delete: false }
+  tags: nginx
+
+- name: configure nginx user
+  become: true
+  lineinfile: dest=/etc/nginx/nginx.conf regexp="user.*nginx;" line="user {{ ansible_user }} {{ ansible_user }};" state=present backrefs=yes
+  notify:
+    - restart nginx service
+  tags: nginx
+
+- name: backup and remove nginx default vhost
+  become: true
+  include: ../../_helper/backup.yml
+  vars: { file: /etc/nginx/conf.d/default.conf, delete: true }
+  tags: nginx
+
+- name: check nginx service state
+  become: true
+  service: name=nginx state=started enabled=yes
+  tags: nginx

@@ -1,0 +1,39 @@
+---
+- name: install packages
+  become: true
+  apt: name={{ item }} state=latest update_cache=true cache_valid_time=3600
+  with_items:
+    - samba
+    - cifs-utils
+  tags: samba
+
+- name: check for smbuser nobody
+  become: true
+  shell: pdbedit -L | grep nobody | cut -d ':' -f 1
+  register: smbuser
+  changed_when: false
+  tags: samba
+
+- name: add smbuser nobody
+  become: true
+  shell: smbpasswd -an nobody
+  when: smbuser.stdout != "nobody"
+  tags: samba
+
+- name: backup config
+  become: true
+  include: ../../_helper/backup.yml
+  vars: { file: /etc/samba/smb.conf, delete: true }
+  tags: samba
+
+- name: configure server
+  become: true
+  template: src=smb.conf dest=/etc/samba/smb.conf
+  notify:
+    - restart service
+  tags: samba
+
+- name: check service state
+  become: true
+  service: name=smbd state=started enabled=yes
+  tags: samba

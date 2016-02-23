@@ -1,0 +1,22 @@
+---
+- name: devbox
+  hosts: all
+  roles:
+    - { role: configure_user }
+    - { role: default_packages }
+    - { role: nfs }
+    - { role: samba }
+    - { role: apache2 }
+    - { role: apache2_vhost, fpm_port: 80, hhvm_port: 8080 }
+    - { role: nginx }
+    - { role: nginx_vhost, fpm_port: 81, hhvm_port: 8181 }
+    # php5: 5.3.29, 5.4.45, 5.5.32, 5.6.18
+    # php7: 7.0.3
+    - { role: phpbrew, php5: [], php7: [ "7.0.3" ] }
+    - { role: hhvm }
+    - { role: composer }
+    - { role: phpunit }
+    - { role: mysql }
+    # version: https://www.phpmyadmin.net/downloads/
+    # language: "all-languages" or "english"
+    - { role: phpmyadmin, pma_version: "4.4.15.4", pma_language: "english" }

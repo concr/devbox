@@ -1,0 +1,15 @@
+- name: restart apache2 service
+  become: true
+  service: name=apache2 state=restarted
+
+- name: restart nginx service
+  become: true
+  service: name=apache2 state=restarted
+
+- name: restart php5-fpm service
+  become: true
+  service: name=php5-fpm state=restarted
+
+- name: restart hhvm service
+  become: true
+  service: name=hhvm state=restarted

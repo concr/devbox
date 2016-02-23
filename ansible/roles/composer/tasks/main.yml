@@ -1,0 +1,12 @@
+---
+- name: download composer installer
+  get_url: url=https://getcomposer.org/installer dest=/home/{{ ansible_user }}/bin/composer-installer
+  tags: composer
+
+- name: run composer installer
+  shell: php /home/{{ ansible_user }}/bin/composer-installer --install-dir=/home/{{ ansible_user }}/bin/ --filename=composer creates=/home/{{ ansible_user }}/bin/composer
+  tags: composer
+
+- name: make composer executable
+  file: path=/home/{{ ansible_user }}/bin/composer mode=0755
+  tags: composer

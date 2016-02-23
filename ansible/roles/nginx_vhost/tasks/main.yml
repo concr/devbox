@@ -1,0 +1,16 @@
+---
+- name: create and enable php-fpm vhost
+  become: true
+  template: src=nginx_vhost.conf dest=/etc/nginx/conf.d/fpm.conf
+  vars: { port: "{{ fpm_port }}", fcgi: 9000 }
+  notify:
+    - restart nginx service
+  tags: nginx_vhost
+
+- name: create and enable hhvm vhost
+  become: true
+  template: src=nginx_vhost.conf dest=/etc/nginx/conf.d/hhvm.conf
+  vars: { port: "{{ hhvm_port }}", fcgi: 9001 }
+  notify:
+    - restart nginx service
+  tags: nginx_vhost

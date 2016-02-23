@@ -1,0 +1,8 @@
+---
+- name: download phpunit
+  get_url: url=https://phar.phpunit.de/phpunit.phar dest=/home/{{ ansible_user }}/bin/phpunit
+  tags: phpunit
+
+- name: make phpunit executable
+  file: path=/home/{{ ansible_user }}/bin/phpunit mode=0755
+  tags: phpunit

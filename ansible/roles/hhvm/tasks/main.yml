@@ -1,0 +1,30 @@
+---
+- name: add apt-key
+  become: true
+  apt_key: url=http://dl.hhvm.com/conf/hhvm.gpg.key state=present
+  register: hhvm_key
+  tags: hhvm
+
+- name: add repository
+  become: true
+  apt_repository: repo="deb http://dl.hhvm.com/debian jessie main" state=present update_cache=yes
+  tags: hhvm
+
+- name: install package
+  become: true
+  apt: name={{ item }} state=latest
+  with_items:
+    - hhvm
+  tags: hhvm
+
+- name: configure server
+  become: true
+  lineinfile: dest=/etc/hhvm/server.ini regexp="hhvm.server.port =.*" line="hhvm.server.port = 9001" state=present backrefs=yes
+  notify:
+    - restart hhvm service
+  tags: hhvm
+
+- name: check service state
+  become: true
+  service: name=hhvm state=started enabled=yes
+  tags: hhvm
