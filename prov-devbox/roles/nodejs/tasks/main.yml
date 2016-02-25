@@ -7,7 +7,7 @@
 
 - name: add repository
   become: true
-  apt_repository: repo="deb http://deb.nodesource.com/setup_4.x jessie main" state=present update_cache=yes
+  apt_repository: repo="deb http://deb.nodesource.com/node_4.x jessie main" state=present update_cache=yes
   tags: nodejs
 
 - name: install default packages
