@@ -5,6 +5,8 @@
   with_items:
     - samba
     - cifs-utils
+  notify:
+    - restart samba service
   tags: samba
 
 - name: check for smbuser nobody

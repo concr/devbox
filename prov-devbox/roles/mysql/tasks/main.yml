@@ -5,15 +5,19 @@
   with_items:
     - mysql-server
     - mysql-client
+  notify:
+    - restart mysql service
   tags: mysql
 
-- name: setup mysql user
-  shell: mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO {{ ansible_user }}@{{ item }}'"
-  with_items:
-    - localhost
-    - 127.0.0.1
-  failed_when: false
-  changed_when: false
+- name: lookup mysql user
+  shell: mysql -u root -sN -e "SELECT COUNT(*) FROM mysql.user WHERE User = '{{ ansible_user }}';"
+  register: mysql_user
+  changed_when: mysql_user.stdout|int != 1
+  tags: mysql
+
+- name: create mysql user
+  shell: mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO '{{ ansible_user }}'@'%' REQUIRE NONE WITH GRANT OPTION;"
+  when: mysql_user.changed
   tags: mysql
 
 - name: check mysql service state

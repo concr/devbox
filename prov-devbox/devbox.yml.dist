@@ -4,14 +4,16 @@
   roles:
     - { role: configure_user }
     - { role: default_packages }
+    # not used, because we use phpbrew
+    #- { role: php5-fpm }
     # php5: 5.3.29, 5.4.45, 5.5.32, 5.6.18
     # php7: 7.0.3
-    - { role: phpbrew, php5: [ "5.6.18" ], php7: [ "7.0.3" ] }
+    - { role: phpbrew, php5: [ "5.5.32", "5.6.18" ], php7: [ "7.0.3" ] }
     - { role: hhvm }
     - { role: apache2 }
-    - { role: apache2_vhosts, fpm_port: 80, hhvm_port: 8080 }
+    - { role: apache2_vhosts, fpm_port: "80", hhvm_port: "8080" }
     - { role: nginx }
-    - { role: nginx_vhosts, fpm_port: 81, hhvm_port: 8181 }
+    - { role: nginx_vhosts, fpm_port: "81", hhvm_port: "8181" }
     - { role: mysql }
     - { role: nfs }
     - { role: samba }

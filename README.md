@@ -24,7 +24,7 @@ vagrant up
 make devbox
 </pre>
 
-Some backround: `make devbox` copies the ansible-playbook and its roles to the
+Some background: `make devbox` copies the ansible-playbook and its roles to the
 _ansible_-VM and runs it with a remote-ssh command from there. So the ansible
 runner connects from within the _ansible_-VM directly to the _devbox_-VM. That's
 the trick, why this case doesn't need a local ansible installation.
@@ -65,9 +65,10 @@ Have a look at the `ansible/devbox.yml` ...
 
 ### SSH
 
-Use `vagrant ssh ansible` (or `... devbox`) to connect to you machine.
+Use `vagrant ssh ansible` (or `... devbox`) to connect to your desired VM.
 
-If you just want to use your typical `ssh`-command, do the following:
+If you just want to use your typical `ssh`-command, do the following on your
+local machine:
 
 <pre>
 vagrant ssh-config >> ~/.ssh/config
@@ -84,6 +85,8 @@ If you want to setup a new vhost like `hello.website.devbox.local` just use the
 <pre>
 createworkspace website hello
 </pre>
+
+Or just run `createworkspace`, it asks you step-by-step.
 
 ### PHP
 

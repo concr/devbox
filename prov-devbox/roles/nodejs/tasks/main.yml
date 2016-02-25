@@ -2,7 +2,6 @@
 - name: add apt-key
   become: true
   apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key state=present
-  register: hhvm_key
   tags: nodejs
 
 - name: add repository

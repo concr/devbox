@@ -2,7 +2,6 @@
 - name: add apt-key
   become: true
   apt_key: url=http://dl.hhvm.com/conf/hhvm.gpg.key state=present
-  register: hhvm_key
   tags: hhvm
 
 - name: add repository
@@ -15,6 +14,8 @@
   apt: name={{ item }} state=latest
   with_items:
     - hhvm
+  notify:
+    - restart hhvm service
   tags: hhvm
 
 - name: configure server

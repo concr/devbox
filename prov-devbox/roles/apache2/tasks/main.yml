@@ -5,6 +5,8 @@
   with_items:
     - apache2-mpm-worker
     - apache2-doc
+  notify:
+    - restart apache2 service
   tags: apache2
 
 - name: enable modules

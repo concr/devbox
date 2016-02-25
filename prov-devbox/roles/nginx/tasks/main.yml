@@ -2,7 +2,6 @@
 - name: add apt-key
   become: true
   apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
-  register: nginx_key
   tags: nginx
 
 - name: adding sources
@@ -15,6 +14,8 @@
   apt: name={{ item }} state=latest
   with_items:
     - nginx
+  notify:
+    - restart nginx service
   tags: nginx
 
 - name: backup nginx config

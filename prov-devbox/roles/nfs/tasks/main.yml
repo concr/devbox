@@ -5,6 +5,8 @@
   with_items:
     - nfs-common
     - nfs-kernel-server
+  notify:
+    - restart nfs service
   tags: nfs
 
 - name: configure server
