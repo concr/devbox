@@ -6,6 +6,7 @@
     - openssh-server
     - apt-transport-https
     - python-software-properties
+    - php5-cli
     - autossh
     - apticron
     - ufw
