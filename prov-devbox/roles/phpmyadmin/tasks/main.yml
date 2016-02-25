@@ -1,5 +1,5 @@
 ---
-- name: create database structure
+- name: create workspace structure
   file: path=/home/{{ ansible_user }}/workspace/admin/db state=directory
   tags: phpmyadmin
 
@@ -21,6 +21,20 @@
   when: config_inc_php.stat.exists == false
   tags: phpmyadmin
 
-- name: create blowfish_secret
-  lineinfile: dest=/home/{{ ansible_user }}/workspace/admin/db/htdocs/config.inc.php regexp="$cfg['blowfish_secret'] =.*" line="$cfg['blowfish_secret'] = 'vagrant'" state=present backrefs=yes
+- name: import database-structure and -tables
+  shell: mysql < /home/{{ ansible_user }}/workspace/admin/db/htdocs/sql/create_tables.sql
+  failed_when: false
+  changed_when: false
+  tags: phpmyadmin
+
+- name: config blowfish_secret
+  lineinfile: dest=/home/{{ ansible_user }}/workspace/admin/db/htdocs/config.inc.php regexp="\$cfg\[\'blowfish_secret\'\] =.*" line="$cfg['blowfish_secret'] = '{{ ansible_user }}';" state=present backrefs=yes
+  tags: phpmyadmin
+
+- name: config host
+  lineinfile: dest=/home/{{ ansible_user }}/workspace/admin/db/htdocs/config.inc.php regexp="\$cfg\[\'Servers\'\]\[\$i\]\[\'host\'\] =.*" line="$cfg['Servers'][$i]['host'] = '127.0.0.1';" state=present backrefs=yes
+  tags: phpmyadmin
+
+- name: config nopassword
+  lineinfile: dest=/home/{{ ansible_user }}/workspace/admin/db/htdocs/config.inc.php regexp="\$cfg\[\'Servers\'\]\[\$i\]\[\'AllowNoPassword\'\] =.*" line="$cfg['Servers'][$i]['AllowNoPassword'] = 'true';" state=present backrefs=yes
   tags: phpmyadmin

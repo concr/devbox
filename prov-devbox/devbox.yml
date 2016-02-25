@@ -17,6 +17,6 @@
     - { role: samba }
     # version: https://www.phpmyadmin.net/downloads/
     # language: "all-languages" or "english"
-    - { role: phpmyadmin, pma_version: "4.4.15.4", pma_language: "english" }
+    - { role: phpmyadmin, pma_version: "4.5.5", pma_language: "english" }
     - { role: composer }
     - { role: phpunit }
