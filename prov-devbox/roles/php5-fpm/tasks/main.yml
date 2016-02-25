@@ -3,7 +3,6 @@
   apt: name={{ item }} state=latest update_cache=true cache_valid_time=3600
   with_items:
     - php5-fpm
-    - php5-cli
     - php5-common
     - php5-curl
     #- php5-intl
