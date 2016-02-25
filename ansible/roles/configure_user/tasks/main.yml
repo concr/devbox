@@ -23,8 +23,16 @@
   copy: src=bashrc dest=/home/{{ ansible_user }}/.bashrc
   tags: configure_user
 
+- name: copy .bash_aliases
+  copy: src=bash_aliases dest=/home/{{ ansible_user }}/.bash_aliases
+  tags: configure_user
+
 - name: copy .vimrc
   copy: src=vimrc dest=/home/{{ ansible_user }}/.vimrc
+  tags: configure_user
+
+- name: copy .ssh/config
+  copy: src=ssh-config dest=/home/{{ ansible_user }}/.ssh/config
   tags: configure_user
 
 - name: install createworkspace command

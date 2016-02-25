@@ -1,16 +1,16 @@
 ---
-- name: adding nginx apt-key
+- name: add apt-key
   become: true
   apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
   register: nginx_key
   tags: nginx
 
-- name: adding nginx sources
+- name: adding sources
   become: true
   apt_repository: repo="deb http://nginx.org/packages/mainline/debian/ jessie nginx" state=present update_cache=yes
   tags: nginx
 
-- name: install nginx packages
+- name: install default packages
   become: true
   apt: name={{ item }} state=latest
   with_items:

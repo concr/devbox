@@ -10,7 +10,7 @@
   apt_repository: repo="deb http://dl.hhvm.com/debian jessie main" state=present update_cache=yes
   tags: hhvm
 
-- name: install package
+- name: install default packages
   become: true
   apt: name={{ item }} state=latest
   with_items:
@@ -24,7 +24,7 @@
     - restart hhvm service
   tags: hhvm
 
-- name: check service state
+- name: check hhvm service state
   become: true
   service: name=hhvm state=started enabled=yes
   tags: hhvm

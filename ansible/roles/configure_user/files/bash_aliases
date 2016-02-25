@@ -1,0 +1,2 @@
+# many users also try "vagrant ssh machine" to connect somewhere else ... ;)
+alias vagrant=''

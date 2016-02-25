@@ -1,4 +1,4 @@
 ---
-- name: restart service
+- name: restart samba service
   become: true
   service: name=smbd state=restarted

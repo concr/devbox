@@ -1,5 +1,5 @@
 ---
-- name: install packages
+- name: install default packages
   become: true
   apt: name={{ item }} state=latest update_cache=true cache_valid_time=3600
   with_items:
@@ -11,7 +11,7 @@
   become: true
   lineinfile: dest=/etc/exports line="/home/{{ ansible_user }} *(rw,all_squash,no_subtree_check,anonuid=1000,anongid=1000)" state=present
   notify:
-    - restart service
+    - restart nfs service
   tags: nfs
 
 - name: reload exports
@@ -20,7 +20,7 @@
   changed_when: false
   tags: nfs
 
-- name: check service state
+- name: check nfs service state
   become: true
   service: name=nfs-kernel-server state=started enabled=yes
   tags: nfs

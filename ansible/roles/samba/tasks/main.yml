@@ -1,5 +1,5 @@
 ---
-- name: install packages
+- name: install default packages
   become: true
   apt: name={{ item }} state=latest update_cache=true cache_valid_time=3600
   with_items:
@@ -30,10 +30,10 @@
   become: true
   template: src=smb.conf dest=/etc/samba/smb.conf
   notify:
-    - restart service
+    - restart samba service
   tags: samba
 
-- name: check service state
+- name: check samba service state
   become: true
   service: name=smbd state=started enabled=yes
   tags: samba

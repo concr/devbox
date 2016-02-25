@@ -1,3 +1,4 @@
 ---
 - name: restart hhvm service
+  become: true
   service: name=hhvm state=restarted

@@ -10,20 +10,35 @@ brew cask install vagrant
 brew install ansible
 </pre>
 
-## Prerequisites
+## Setup/Start
 
-You have to edit the `Vagrantfile`
+### Case 1: __without__ local ansible installation (e.g. Windows)
+
+Start an _ansible_- and _devbox_-VM, then do the provision from the _ansible_-VM.
+
 <pre>
-config.vm.hostname = "devbox.local"
-config.vm.network "private_network", ip: "10.10.10.5"
+vagrant up
+make devbox
 </pre>
 
-... a matching entry in `ansible/inventory/hosts`
+Some backround: `make devbox` copies the ansible-playbook and its roles to the
+_ansible_-VM and runs it with a remote-ssh command from there. So the ansible
+runner connects from within the _ansible_-VM directly to the _devbox_-VM. That's
+the trick, why this case doesn't need a local ansible installation.
+
+### Case 2: __with__ local ansible installation (e.g. OSX, Linux)
+
+Start a _devbox_-VM and do the provision from your local machine.
+
 <pre>
-devbox.local ansible_host=10.10.10.5 ansible_user=vagrant
+vagrant up devbox
+make devbox-local
 </pre>
 
-... and following lines in your local `/etc/hosts` for the default vhosts
+## Post installation
+
+Add following lines to your local `/etc/hosts` for the default vhosts
+
 <pre>
 10.10.10.5 db.admin.devbox.local
 10.10.10.5 info.admin.devbox.local
@@ -32,21 +47,26 @@ devbox.local ansible_host=10.10.10.5 ansible_user=vagrant
 10.10.10.5 test.project.devbox.local
 </pre>
 
-To configure PHP versions to compile and webserver ports, edit `devbox.yml`.
-
-## Setup/Start
-
-<pre>
-vagrant up
-</pre>
-
-## Maintenance
-
-<pre>
-vagrant provision
-</pre>
-
 ## Good to know
+
+### Configure webserver/fpm ports and PHP versions
+
+Have a look at the `ansible/devbox.yml` ...
+
+### SSH
+
+Use `vagrant ssh ansible` (or `... devbox`) to connect to you machine.
+
+If you just want to use your typical `ssh`-command, do the following:
+
+<pre>
+vagrant ssh-config >> ~/.ssh/config
+</pre>
+
+This command puts a host alias to your ssh-config. From that moment on, you can
+connect to you machine(s) with a simple `ssh ansible` (or `... devbox`).
+
+### Workspaces
 
 If you want to setup a new vhost like `hello.website.devbox.local` just use the
 `createworkspace` tool within your VM.
@@ -55,15 +75,17 @@ If you want to setup a new vhost like `hello.website.devbox.local` just use the
 createworkspace website hello
 </pre>
 
-## PHP
+### PHP
 
 To select your PHP version on PHPBrew do following steps in your VM:
+
 <pre>
 phpbrew switch php-7.0.3 (or some other version)
 phpbrew fpm start
 </pre>
 
 If you want to change the version, please stop the fpm before switching!
+
 <pre>
 phpbrew fpm stop
 phpbrew switch php-5.6.18
