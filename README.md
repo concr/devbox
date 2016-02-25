@@ -47,6 +47,13 @@ Add following lines to your local `/etc/hosts` for the default vhosts
 10.10.10.5 test.project.devbox.local
 </pre>
 
+And do following in your `devbox`-VM, to start the php-fpm:
+
+<pre>
+phpbrew switch php-7.0.3 (or your prefered/installed version)
+phpbrew fpm start
+</pre>
+
 ## Good to know
 
 ### Configure webserver/fpm ports and PHP versions
@@ -76,13 +83,6 @@ createworkspace website hello
 </pre>
 
 ### PHP
-
-To select your PHP version on PHPBrew do following steps in your VM:
-
-<pre>
-phpbrew switch php-7.0.3 (or some other version)
-phpbrew fpm start
-</pre>
 
 If you want to change the version, please stop the fpm before switching!
 

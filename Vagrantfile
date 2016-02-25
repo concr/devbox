@@ -23,14 +23,12 @@ Vagrant.configure("2") do |config|
       s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
     end
 
-    ans.vm.provision "shell", inline: "apt-get update", privileged: true
-    ans.vm.provision "shell", inline: "apt-get install -y build-essential python-software-properties openssh-server", privileged: true
-    ans.vm.provision "shell", inline: "apt-add-repository -y ppa:ansible/ansible", privileged: true
-    ans.vm.provision "shell", inline: "apt-get update", privileged: true
-    ans.vm.provision "shell", inline: "apt-get install -y ansible", privileged: true
-    ans.vm.provision "shell", inline: "apt-get autoremove", privileged: true
-    ans.vm.provision "shell", inline: "apt-get autoclean", privileged: true
-    #ans.vm.provision "file", source: "devbox-playbook", destination: "/home/vagrant/devbox-playbook"
+    # copy some config defaults
+    ans.vm.provision ".bashrc", type: "file", source: "prov-devbox/roles/configure_user/files/bashrc", destination: "/home/vagrant/.bashrc"
+    ans.vm.provision ".bash_aliases", type: "file", source: "prov-devbox/roles/configure_user/files/bash_aliases", destination: "/home/vagrant/.bash_aliases"
+    ans.vm.provision ".vimrc", type: "file", source: "prov-devbox/roles/configure_user/files/vimrc", destination: "/home/vagrant/.vimrc"
+    ans.vm.provision ".ssh/config", type: "file", source: "prov-devbox/roles/configure_user/files/ssh-config", destination: "/home/vagrant/.ssh/config"
+    ans.vm.provision "setup script", type: "shell", path: "prov-ansible/bootstrap.sh", privileged: true
   end
 
   config.vm.define "devbox" do |dev|
