@@ -7,7 +7,7 @@ help:
 devbox: sync-playbook ansible-remote
 
 sync-playbook:
-	@rsync -avW --delete prov-devbox vagrant@10.10.10.4:/home/vagrant
+	@rsync -avW --delete --exclude "*.dist" prov-devbox vagrant@10.10.10.4:/home/vagrant
 
 ansible-remote:
 	@vagrant ssh ansible -c "cd prov-devbox && ansible-playbook devbox.yml -i inventory/hosts"
