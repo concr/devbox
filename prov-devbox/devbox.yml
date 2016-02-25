@@ -20,3 +20,4 @@
     - { role: phpmyadmin, pma_version: "4.5.5", pma_language: "english" }
     - { role: composer }
     - { role: phpunit }
+    - { role: nodejs }
