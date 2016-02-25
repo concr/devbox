@@ -32,7 +32,7 @@
 - name: backup default config
   become: true
   include: ../../_helper/backup.yml
-  vars: { file: etc/php5/fpm/pool.d/www.conf, delete: false }
+  vars: { file: /etc/php5/fpm/pool.d/www.conf, delete: false }
   tags: php5-fpm
 
 - name: configure host and port
