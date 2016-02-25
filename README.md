@@ -2,7 +2,13 @@
 
 ## Needs
 
-[VirtualBox](https://www.virtualbox.org/wiki/Downloads), [Vagrant](https://www.vagrantup.com/downloads.html), [Ansible](http://docs.ansible.com/ansible/intro_installation.html) or if you're on a Mac with [homebrew](http://brew.sh) and [caskroom](http://caskroom.io):
+[VirtualBox](https://www.virtualbox.org/wiki/Downloads),
+[Vagrant](https://www.vagrantup.com/downloads.html),
+[Ansible](http://docs.ansible.com/ansible/intro_installation.html)
+or if you're on a Mac with
+[homebrew](http://brew.sh) and
+[caskroom](http://caskroom.io):
+
 <pre>
 brew cask install virtualbox
 brew cask install virtualbox-extension-pack
@@ -19,6 +25,9 @@ as you want.
 
 Start an _ansible_- and _devbox_-VM, then do the provision from the _ansible_-VM.
 
+Put the Vagrant ssh-key into your ssh-agent. On Windows this is typically made
+with `pageant`. You find the key in your home directory `.vagrant.d/insecure_private_key`.
+
 <pre>
 vagrant up
 make devbox
@@ -30,6 +39,12 @@ runner connects from within the _ansible_-VM directly to the _devbox_-VM. That's
 the trick, why this case doesn't need a local ansible installation.
 
 ### Case 2: __with__ local ansible installation (e.g. OSX, Linux)
+
+Put the Vagrant ssh-key into your ssh-agent:
+
+<pre>
+ssh-add -K ~/.vagrant.d/insecure_private_key
+</pre>
 
 Start a _devbox_-VM and do the provision from your local machine.
 
@@ -67,15 +82,8 @@ Have a look at the `ansible/devbox.yml` ...
 
 Use `vagrant ssh ansible` (or `... devbox`) to connect to your desired VM.
 
-If you just want to use your typical `ssh`-command, do the following on your
-local machine:
-
-<pre>
-vagrant ssh-config >> ~/.ssh/config
-</pre>
-
-This command puts a host alias to your ssh-config. From that moment on, you can
-connect to you machine(s) with a simple `ssh ansible` (or `... devbox`).
+If you just want to use your typical `ssh`-command, __don't forget to put the
+Vagrant key into your ssh-agent__.
 
 ### Workspaces
 

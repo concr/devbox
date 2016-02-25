@@ -23,7 +23,6 @@ Vagrant.configure("2") do |config|
       s.inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
     end
 
-    # copy some config defaults
     ans.vm.provision ".bashrc", type: "file", source: "prov-devbox/roles/configure_user/files/bashrc", destination: "/home/vagrant/.bashrc"
     ans.vm.provision ".bash_aliases", type: "file", source: "prov-devbox/roles/configure_user/files/bash_aliases", destination: "/home/vagrant/.bash_aliases"
     ans.vm.provision ".vimrc", type: "file", source: "prov-devbox/roles/configure_user/files/vimrc", destination: "/home/vagrant/.vimrc"
@@ -46,7 +45,7 @@ Vagrant.configure("2") do |config|
       vb.memory = "4096"
       vb.cpus = "4"
     end
-
+    dev.vm.provision ".ssh/config", type: "file", source: "prov-devbox/roles/configure_user/files/ssh-config", destination: "/home/vagrant/.ssh/config"
   end
 
 end
