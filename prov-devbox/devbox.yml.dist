@@ -12,9 +12,9 @@
       install: { version: 4.5.5, language: english }
     apache2:
       fpm: { ext: 80, int: 9000 }
-      hhvm: { ext: 81, int: 9001 }
+      hhvm: { ext: 8080, int: 9001 }
     nginx:
-      fpm: { ext: 8080, int: 9000 }
+      fpm: { ext: 81, int: 9000 }
       hhvm: { ext: 8181, int: 9001 }
 
   roles:

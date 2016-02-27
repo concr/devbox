@@ -46,7 +46,9 @@
   with_dict: "{{ nginx }}"
   notify:
     - restart nginx service
-  tags: nginx
+  tags:
+    - nginx
+    - vhosts
 
 - name: check nginx service state
   become: true

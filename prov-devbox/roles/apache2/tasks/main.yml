@@ -54,7 +54,9 @@
   with_dict: "{{ apache2 }}"
   notify:
     - restart apache2 service
-  tags: apache2
+  tags:
+    - apache2
+    - vhosts
 
 - name: enable vhosts
   become: true
@@ -62,7 +64,9 @@
   with_dict: "{{ apache2 }}"
   notify:
     - restart apache2 service
-  tags: apache2
+  tags:
+    - apache2
+    - vhosts
 
 - name: check service state
   become: true
