@@ -3,10 +3,12 @@
   become: true
   apt: name={{ item }} state=latest update_cache=true cache_valid_time=3600
   with_items:
-    - openssh-server
-    - apt-transport-https
+    - build-essential
     - python-software-properties
+    #- openssh-server
+    - apt-transport-https
     - php5-cli
+    - ruby
     - autossh
     - apticron
     - ufw

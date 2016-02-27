@@ -15,7 +15,6 @@
   become: true
   apt: name={{ item }} state=latest update_cache=true cache_valid_time=3600
   with_items:
-    - build-essential
     - libssl-dev
     - libxml2-dev
     - libbz2-dev
@@ -25,22 +24,45 @@
   tags: phpbrew
 
 - name: compiling (ATTENTION, it takes a while ...)
-  shell: /home/{{ ansible_user }}/bin/phpbrew install php-{{ item }} +default +mb +fpm +debug +mysql +sqlite +pdo creates=/home/{{ ansible_user }}/.phpbrew/build/php-{{ item }}
-  with_items:
-    - "{{ php5 }}"
-    - "{{ php7 }}"
+  shell: /home/{{ ansible_user }}/bin/phpbrew install php-{{ item.key }} +default +mb +fpm +debug +mysql +sqlite +pdo creates=/home/{{ ansible_user }}/.phpbrew/php/php-{{ item.key }}/bin/php
+  with_dict: "{{ phpbrew.compile }}"
   tags: phpbrew
 
-- name: set timezones
-  lineinfile: dest=/home/{{ ansible_user}}/.phpbrew/php/php-{{ item }}/etc/php.ini regexp=".*date.timezone =.*" line="date.timezone = Europe/Berlin" state=present backrefs=yes
-  with_items:
-    - "{{ php5 }}"
-    - "{{ php7 }}"
+- name: (php5/7) set timezone
+  ini_file: dest=/home/{{ ansible_user }}/.phpbrew/php/php-{{ item.key }}/etc/php.ini section="Date" option="date.timezone" value="Europe/Berlin"
+  with_dict: "{{ phpbrew.compile }}"
   tags: phpbrew
 
-# only needed for php7
-- name: activating pools
-  copy: remote_src=yes src=/home/{{ ansible_user }}/.phpbrew/php/php-{{ item }}/etc/php-fpm.d/www.conf.default dest=/home/{{ ansible_user }}/.phpbrew/php/php-{{ item }}/etc/php-fpm.d/www.conf
-  with_items:
-    - "{{ php7 }}"
+# php5
+
+- name: (php5) disable user
+  ini_file: dest=/home/{{ ansible_user}}/.phpbrew/php/php-{{ item.key }}/etc/php-fpm.conf section="www" option="user" value=""
+  with_dict: "{{ phpbrew.compile }}"
+  when: item.key[:1]|int == 5
   tags: phpbrew
+
+- name: (php5) disable group
+  ini_file: dest=/home/{{ ansible_user}}/.phpbrew/php/php-{{ item.key }}/etc/php-fpm.conf section="www" option="group" value=""
+  with_dict: "{{ phpbrew.compile }}"
+  when: item.key[:1]|int == 5
+  tags: phpbrew
+
+# php7
+
+- name: (php7) activating pool
+  copy: remote_src=yes src=/home/{{ ansible_user }}/.phpbrew/php/php-{{ item.key }}/etc/php-fpm.d/www.conf.default dest=/home/{{ ansible_user }}/.phpbrew/php/php-{{ item.key }}/etc/php-fpm.d/www.conf force=no
+  with_dict: "{{ phpbrew.compile }}"
+  when: item.key[:1]|int == 7
+  tags: phpbrew_test
+
+- name: (php7) disable user
+  ini_file: dest=/home/{{ ansible_user }}/.phpbrew/php/php-{{ item.key }}/etc/php-fpm.d/www.conf section="www" option="user" value=""
+  with_dict: "{{ phpbrew.compile }}"
+  when: item.key[:1]|int == 7
+  tags: phpbrew_test
+
+- name: (php7) disable group
+  ini_file: dest=/home/{{ ansible_user }}/.phpbrew/php/php-{{ item.key }}/etc/php-fpm.d/www.conf section="www" option="group" value=""
+  with_dict: "{{ phpbrew.compile }}"
+  when: item.key[:1]|int == 7
+  tags: phpbrew_test

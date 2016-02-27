@@ -22,6 +22,16 @@
     - restart apache2 service
   tags: apache2
 
+- name: disable default vhosts
+  become: true
+  shell: a2dissite {{ item }}.conf removes=/etc/apache2/sites-enabled/{{ item }}.conf
+  with_items:
+    - 000-default
+    - default-ssl
+  notify:
+    - restart apache2 service
+  tags: apache2_rem
+
 - name: backup port config
   become: true
   include: ../../_helper/backup.yml
@@ -31,6 +41,25 @@
 - name: disable default port
   become: true
   lineinfile: dest=/etc/apache2/ports.conf regexp="Listen 80" line="#Listen 80" state=present backrefs=yes
+  notify:
+    - restart apache2 service
+  tags: apache2
+
+- name: create vhosts
+  become: true
+  template: src=apache2_vhost.conf dest=/etc/apache2/sites-available/{{ item.key }}.conf
+  vars:
+    port: "{{ item.value.ext }}"
+    fcgi: "{{ item.value.int }}"
+  with_dict: "{{ apache2 }}"
+  notify:
+    - restart apache2 service
+  tags: apache2
+
+- name: enable vhosts
+  become: true
+  shell: a2ensite {{ item.key }}.conf creates=/etc/apache2/sites-enabled/{{ item.key }}.conf
+  with_dict: "{{ apache2 }}"
   notify:
     - restart apache2 service
   tags: apache2

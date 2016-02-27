@@ -18,6 +18,12 @@
     - restart nginx service
   tags: nginx
 
+- name: backup and remove nginx default vhost
+  become: true
+  include: ../../_helper/backup.yml
+  vars: { file: /etc/nginx/conf.d/default.conf, delete: true }
+  tags: nginx
+
 - name: backup nginx config
   become: true
   include: ../../_helper/backup.yml
@@ -31,10 +37,15 @@
     - restart nginx service
   tags: nginx
 
-- name: backup and remove nginx default vhost
+- name: create and enable vhosts
   become: true
-  include: ../../_helper/backup.yml
-  vars: { file: /etc/nginx/conf.d/default.conf, delete: true }
+  template: src=nginx_vhost.conf dest=/etc/nginx/conf.d/{{ item.key }}.conf
+  vars:
+    port: "{{ item.value.ext }}"
+    fcgi: "{{ item.value.int }}"
+  with_dict: "{{ nginx }}"
+  notify:
+    - restart nginx service
   tags: nginx
 
 - name: check nginx service state
