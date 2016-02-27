@@ -23,13 +23,14 @@ as you want.
 
 ### Case 1: __without__ local ansible installation (e.g. Windows)
 
-Start an _ansible_- and _devbox_-VM, then do the provision from the _ansible_-VM.
+Start the _ansible_- and _devbox_-VM, then do the provision from the _ansible_-VM.
 
 Put the Vagrant ssh-key into your ssh-agent. On Windows this is typically made
 with `pageant`. You find the key in your home directory `.vagrant.d/insecure_private_key`.
 
 <pre>
 vagrant up
+make init
 make devbox
 </pre>
 
@@ -43,10 +44,10 @@ the trick, why this case doesn't need a local ansible installation.
 Put the Vagrant ssh-key into your ssh-agent:
 
 <pre>
-ssh-add -K ~/.vagrant.d/insecure_private_key
+ssh-add ~/.vagrant.d/insecure_private_key
 </pre>
 
-Start a _devbox_-VM and do the provision from your local machine.
+Start the _devbox_-VM and do the provision from your local machine.
 
 <pre>
 vagrant up devbox
@@ -84,6 +85,9 @@ Use `vagrant ssh ansible` (or `... devbox`) to connect to your desired VM.
 
 If you just want to use your typical `ssh`-command, __don't forget to put the
 Vagrant key into your ssh-agent__.
+
+After `make init` you're also able to connect between both machines from each
+other with `ssh devbox` or `ssh ansible`.
 
 ### Workspaces
 
