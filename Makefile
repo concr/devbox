@@ -17,20 +17,20 @@ handshake:
 devbox: sync-playbook ansible-remote
 
 sync-playbook:
-	@rsync -avW --delete --exclude "*.dist" prov-devbox vagrant@10.10.10.4:/home/vagrant
+	@rsync -avW --delete --exclude "*.dist" provisioning vagrant@10.10.10.4:/home/vagrant
 
 ansible-remote:
 ifdef tags
-	@vagrant ssh ansible -c "cd prov-devbox && ansible-playbook devbox.yml -i inventory/hosts -t $(tags)"
+	@vagrant ssh ansible -c "cd provisioning && ansible-playbook devbox.yml -i inventory/hosts -t $(tags)"
 else
-	@vagrant ssh ansible -c "cd prov-devbox && ansible-playbook devbox.yml -i inventory/hosts"
+	@vagrant ssh ansible -c "cd provisioning && ansible-playbook devbox.yml -i inventory/hosts"
 endif
 
 devbox-local: ansible-local
 
 ansible-local:
 ifdef tags
-	@cd prov-devbox && ansible-playbook devbox.yml -i inventory/hosts -t $(tags)
+	@cd provisioning && ansible-playbook devbox.yml -i inventory/hosts -t $(tags)
 else
-	@cd prov-devbox && ansible-playbook devbox.yml -i inventory/hosts
+	@cd provisioning && ansible-playbook devbox.yml -i inventory/hosts
 endif

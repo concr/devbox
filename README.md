@@ -18,7 +18,7 @@ brew install ansible
 
 ## Setup/Start
 
-Copy `prov-devbox/devbox.yml.dist` to `prov-devbox/devbox.yml` and configure it
+Copy `provisioning/devbox.yml.dist` to `provisioning/devbox.yml` and configure it
 as you want.
 
 ### Case 1: __without__ local ansible installation (e.g. Windows)
