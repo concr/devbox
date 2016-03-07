@@ -28,6 +28,9 @@ Start the _ansible_- and _devbox_-VM, then do the provision from the _ansible_-V
 Put the Vagrant ssh-key into your ssh-agent. On Windows this is typically made
 with `pageant`. You find the key in your home directory `.vagrant.d/insecure_private_key`.
 
+Please convert this key with `pageant` before using to a compatible format through
+the `Conversion`-feature of `pageant`!
+
 <pre>
 vagrant up
 make init
