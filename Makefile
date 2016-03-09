@@ -11,6 +11,8 @@ init: handshake
 handshake:
 	ssh vagrant@10.10.10.4 'exit'
 	ssh vagrant@10.10.10.5 'exit'
+	scp ~/.vagrant.d/insecure_private_key vagrant@10.10.10.4:~/.ssh/id_rsa
+	scp ~/.vagrant.d/insecure_private_key vagrant@10.10.10.5:~/.ssh/id_rsa
 	vagrant ssh ansible -c "ssh devbox 'exit'"
 	vagrant ssh devbox -c "ssh ansible 'exit'"
 
