@@ -1,0 +1,37 @@
+---
+- name: add apt-key
+  become: true
+  apt_key: url=https://packages.elastic.co/GPG-KEY-elasticsearch state=present
+  tags: elasticsearch
+
+- name: add repository
+  become: true
+  apt_repository: repo="deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" state=present update_cache=yes
+  tags: elasticsearch
+
+- name: install default packages
+  become: true
+  apt: name={{ item }} state=latest
+  with_items:
+    - openjdk-7-jre-headless
+    - elasticsearch
+  notify:
+    - restart elasticsearch service
+  tags: elasticsearch
+
+- name: configure host
+  become: true
+  lineinfile: dest=/etc/elasticsearch/elasticsearch.yml regexp=".*network.host:.*" line="network.host:{{ ' ' }}[ \"localhost\", \"127.0.0.1\", \"{{ ansible_host }}\" ]" state=present backrefs=yes
+  notify:
+    - restart elasticsearch service
+  tags: elasticsearch
+
+- name: install head-plugin
+  become: true
+  shell: /usr/share/elasticsearch/bin/plugin install mobz/elasticsearch-head creates=/usr/share/elasticsearch/plugins/head
+  tags: elasticsearch
+
+- name: check elasticsearch service state
+  become: true
+  service: name=elasticsearch state=started enabled=yes
+  tags: elasticsearch

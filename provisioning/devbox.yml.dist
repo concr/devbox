@@ -32,3 +32,5 @@
     - { role: composer }
     - { role: phpunit }
     - { role: nodejs }
+    - { role: mongodb }
+    - { role: elasticsearch }
