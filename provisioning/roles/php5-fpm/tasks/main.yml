@@ -21,6 +21,7 @@
     #- php5-xcache
     - php5-xdebug
     - php5-xmlrpc
+    - php5-opcache
     #- php5-xsl
     #- php-pear
     #- php-auth
@@ -36,21 +37,21 @@
 
 - name: configure host and port
   become: true
-  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp="listen =.*" line="listen = 127.0.0.1:9000 state=present backrefs=yes
+  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp="listen =.*" line="listen = 127.0.0.1:9000" state=present backrefs=yes
   notify:
     - restart php5-fpm service
   tags: php5-fpm
 
 - name: configure uid
   become: true
-  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp="user =.*" line="user = vagrant" state=present backrefs=yes
+  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp="user =.*" line="user = {{ ansible_user }}" state=present backrefs=yes
   notify:
     - restart php5-fpm service
   tags: php5-fpm
 
 - name: configure gid
   become: true
-  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp="group =.*" line="group = vagrant" state=present backrefs=yes
+  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp="group =.*" line="group = {{ ansible_user }}" state=present backrefs=yes
   notify:
     - restart php5-fpm service
   tags: php5-fpm

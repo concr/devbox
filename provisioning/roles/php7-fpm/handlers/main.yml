@@ -1,0 +1,4 @@
+---
+- name: restart php5-fpm service
+  become: true
+  service: name=php5-fpm state=restarted

@@ -19,6 +19,7 @@
     - htop
     - nmap
     - sysstat
+    - lsof
     - dnsutils
     - git
     - subversion
@@ -26,6 +27,7 @@
     - tree
     - ntp
     - ntpdate
+    - bash-completion
     - screenfetch
     #- imagemagick
     #- mcrypt
