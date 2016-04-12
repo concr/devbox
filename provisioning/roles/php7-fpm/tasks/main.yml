@@ -1,0 +1,73 @@
+---
+- name: add apt-key
+  become: true
+  apt_key: url=http://www.dotdeb.org/dotdeb.gpg state=present
+  tags: php7-fpm
+
+- name: adding sources
+  become: true
+  apt_repository: repo="deb http://packages.dotdeb.org jessie all" state=present update_cache=yes
+  tags: php7-fpm
+
+- name: install default packages
+  become: true
+  apt: name={{ item }} state=latest update_cache=true cache_valid_time=3600
+  with_items:
+    - php7.0-fpm
+    - php7.0-common
+    - php7.0-curl
+    #- php7.0-intl
+    - php7.0-json
+    #- php7.0-gd
+    #- php7.0-imagick
+    #- php7.0-imap
+    #- php7.0-memcache
+    #- php7.0-memcached
+    - php7.0-mcrypt
+    - php7.0-mysql
+    #- php7.0-recode
+    #- php7.0-snmp
+    - php7.0-sqlite
+    - php7.0-tidy
+    #- php7.0-xcache
+    - php7.0-xdebug
+    - php7.0-xmlrpc
+    - php7.0-opcache
+    #- php7.0-xsl
+    #- php-pear
+    #- php-auth
+  notify:
+    - restart php7-fpm service
+  tags: php7-fpm
+
+- name: backup default config
+  become: true
+  include: ../../_helper/backup.yml
+  vars: { file: /etc/php5/fpm/pool.d/www.conf, delete: false }
+  tags: php7-fpm
+
+- name: configure host and port
+  become: true
+  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp="listen =.*" line="listen = 127.0.0.1:9000" state=present backrefs=yes
+  notify:
+    - restart php7-fpm service
+  tags: php7-fpm
+
+- name: configure uid
+  become: true
+  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp="user =.*" line="user = {{ ansible_user }}" state=present backrefs=yes
+  notify:
+    - restart php7-fpm service
+  tags: php7-fpm
+
+- name: configure gid
+  become: true
+  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp="group =.*" line="group = www-data" state=present backrefs=yes
+  notify:
+    - restart php7-fpm service
+  tags: php7-fpm
+
+- name: check service state
+  become: true
+  service: name=php7-fpm state=started enabled=yes
+  tags: php7-fpm
