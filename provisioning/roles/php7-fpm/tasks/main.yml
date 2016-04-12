@@ -62,7 +62,7 @@
 
 - name: configure gid
   become: true
-  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp="group =.*" line="group = www-data" state=present backrefs=yes
+  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp="group =.*" line="group = {{ ansible_user }}" state=present backrefs=yes
   notify:
     - restart php7-fpm service
   tags: php7-fpm
