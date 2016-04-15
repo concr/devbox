@@ -1,4 +1,4 @@
 ---
-- name: restart php5-fpm service
+- name: restart php7-fpm service
   become: true
-  service: name=php5-fpm state=restarted
+  service: name=php7-fpm state=restarted

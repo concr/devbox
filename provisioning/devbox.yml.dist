@@ -20,7 +20,8 @@
   roles:
     - { role: configure_user }
     - { role: default_packages }
-    #- { role: php5-fpm }
+    - { role: php5-fpm }
+    - { role: php7-fpm }
     - { role: phpbrew }
     - { role: hhvm }
     - { role: apache2 }
