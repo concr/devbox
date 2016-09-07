@@ -27,7 +27,7 @@
     - php7.0-mysql
     #- php7.0-recode
     #- php7.0-snmp
-    - php7.0-sqlite
+    - php7.0-sqlite3
     - php7.0-tidy
     #- php7.0-xcache
     - php7.0-xdebug
@@ -43,31 +43,31 @@
 - name: backup default config
   become: true
   include: ../../_helper/backup.yml
-  vars: { file: /etc/php5/fpm/pool.d/www.conf, delete: false }
+  vars: { file: /etc/php/7.0/fpm/pool.d/www.conf, delete: false }
   tags: php7-fpm
 
 - name: configure host and port
   become: true
-  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp="listen =.*" line="listen = 127.0.0.1:9000" state=present backrefs=yes
+  lineinfile: dest=/etc/php/7.0/fpm/pool.d/www.conf regexp="listen =.*" line="listen = 127.0.0.1:9000" state=present backrefs=yes
   notify:
-    - restart php7-fpm service
+    - restart php7.0-fpm service
   tags: php7-fpm
 
 - name: configure uid
   become: true
-  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp="user =.*" line="user = {{ ansible_user }}" state=present backrefs=yes
+  lineinfile: dest=/etc/php/7.0/fpm/pool.d/www.conf regexp="listen.owner =.*" line="listen.owner = {{ ansible_user }}" state=present backrefs=yes
   notify:
-    - restart php7-fpm service
+    - restart php7.0-fpm service
   tags: php7-fpm
 
 - name: configure gid
   become: true
-  lineinfile: dest=/etc/php5/fpm/pool.d/www.conf regexp="group =.*" line="group = {{ ansible_user }}" state=present backrefs=yes
+  lineinfile: dest=/etc/php/7.0/fpm/pool.d/www.conf regexp="listen.group =.*" line="listen.group = {{ ansible_user }}" state=present backrefs=yes
   notify:
-    - restart php7-fpm service
+    - restart php7.0-fpm service
   tags: php7-fpm
 
 - name: check service state
   become: true
-  service: name=php7-fpm state=started enabled=yes
+  service: name=php7.0-fpm state=started enabled=yes
   tags: php7-fpm
