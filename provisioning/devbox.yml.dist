@@ -3,35 +3,40 @@
   hosts: devbox.local
 
   vars:
-    # 5.3.29, 5.4.45, 5.5.32, 5.6.18, 7.0.3
     phpbrew:
-      compile: { 5.4.45, 5.5.32, 5.6.18, 7.0.3 }
-    # version: https://www.phpmyadmin.net/downloads/
-    # language: "all-languages" or "english"
+      version: { 5.6.26, 7.0.11 } # 5.4.45, 5.5.38, 5.6.26, 7.0.11
+
     phpmyadmin:
-      install: { version: 4.5.5, language: english }
-    apache2:
-      fpm: { ext: 80, int: 9000 }
-      hhvm: { ext: 8080, int: 9001 }
-    nginx:
-      fpm: { ext: 81, int: 9000 }
-      hhvm: { ext: 8181, int: 9001 }
+      version: 4.6.4 # version: https://www.phpmyadmin.net/downloads/
+      language: english # language: "all-languages" or "english"
+
+    apache2_vhosts:
+      #- { name: php5-fpm, http: 80, https: 443, fcgi: 9000 }
+      #- { name: php7-fpm, http: 80, https: 443, fcgi: 9000 }
+      #- { name: hhvm, http: 80, https: 443, fcgi: 9000 }
+      - { name: phpbrew, http: 80, https: 443, fcgi: 9000 }
+
+    nginx_vhosts:
+      #- { name: php5-fpm, http: 80, fcgi: 9000 }
+      #- { name: php7-fpm, http: 80, fcgi: 9000 }
+      #- { name: hhvm, http: 80, fcgi: 9000 }
+      #- { name: phpbrew, http: 80, fcgi: 9000 }
 
   roles:
     - { role: configure_user }
     - { role: default_packages }
-    - { role: php5-fpm }
-    - { role: php7-fpm }
-    - { role: phpbrew }
-    - { role: hhvm }
+    #- { role: php5-fpm, port: 9000 }
+    #- { role: php7-fpm, port: 9000 }
+    #- { role: hhvm, port: 9001 }
+    - { role: phpbrew, port: 9000 }
     - { role: apache2 }
-    - { role: nginx }
+    #- { role: nginx }
     - { role: mysql }
     - { role: nfs }
-    - { role: samba }
+    #- { role: samba }
     - { role: phpmyadmin }
     - { role: composer }
-    - { role: phpunit }
-    - { role: nodejs }
-    - { role: mongodb }
-    - { role: elasticsearch }
+    #- { role: phpunit }
+    #- { role: nodejs }
+    #- { role: mongodb }
+    #- { role: elasticsearch }

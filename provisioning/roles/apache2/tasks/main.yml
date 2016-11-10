@@ -13,6 +13,7 @@
   become: true
   apache2_module: name='{{ item }}' state=present
   with_items:
+    - ssl
     - expires
     - headers
     - rewrite
@@ -32,26 +33,13 @@
     - restart apache2 service
   tags: apache2_rem
 
-- name: backup port config
-  become: true
-  include: ../../_helper/backup.yml
-  vars: { file: /etc/apache2/ports.conf, delete: false }
-  tags: apache2
-
-- name: disable default port
-  become: true
-  lineinfile: dest=/etc/apache2/ports.conf regexp="Listen 80" line="#Listen 80" state=present backrefs=yes
-  notify:
-    - restart apache2 service
-  tags: apache2
-
 - name: create vhosts
   become: true
-  template: src=apache2_vhost.conf dest=/etc/apache2/sites-available/{{ item.key }}.conf
+  template: src=apache2_vhost.conf dest=/etc/apache2/sites-available/{{ item.name }}.conf
   vars:
-    port: "{{ item.value.ext }}"
-    fcgi: "{{ item.value.int }}"
-  with_dict: "{{ apache2 }}"
+    port: "{{ item.http }}"
+    fcgi: "{{ item.fcgi }}"
+  with_items: "{{ apache2_vhosts }}"
   notify:
     - restart apache2 service
   tags:
@@ -60,8 +48,31 @@
 
 - name: enable vhosts
   become: true
-  shell: a2ensite {{ item.key }}.conf creates=/etc/apache2/sites-enabled/{{ item.key }}.conf
-  with_dict: "{{ apache2 }}"
+  shell: a2ensite {{ item.name }} creates=/etc/apache2/sites-enabled/{{ item.name }}.conf
+  with_items: "{{ apache2_vhosts }}"
+  notify:
+    - restart apache2 service
+  tags:
+    - apache2
+    - vhosts
+
+- name: create ssl vhosts
+  become: true
+  template: src=apache2_vhost-ssl.conf dest=/etc/apache2/sites-available/{{ item.name }}-ssl.conf
+  vars:
+    port: "{{ item.https }}"
+    fcgi: "{{ item.fcgi }}"
+  with_items: "{{ apache2_vhosts }}"
+  notify:
+    - restart apache2 service
+  tags:
+    - apache2
+    - vhosts
+
+- name: enable ssl vhosts
+  become: true
+  shell: a2ensite {{ item.name }}-ssl creates=/etc/apache2/sites-enabled/{{ item.name }}-ssl.conf
+  with_items: "{{ apache2_vhosts }}"
   notify:
     - restart apache2 service
   tags:

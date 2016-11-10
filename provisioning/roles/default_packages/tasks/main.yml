@@ -7,7 +7,7 @@
     - python-software-properties
     #- openssh-server
     - apt-transport-https
-    #- php5-cli
+    - php5-cli
     - ruby
     - autossh
     - apticron

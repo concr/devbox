@@ -4,11 +4,11 @@
   tags: phpmyadmin
 
 - name: download package
-  unarchive: src=https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin.install.version }}/phpMyAdmin-{{ phpmyadmin.install.version }}-{{ phpmyadmin.install.language }}.tar.gz dest=/home/{{ ansible_user }}/workspace/admin/db copy=no
+  unarchive: src=https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin.version }}/phpMyAdmin-{{ phpmyadmin.version }}-{{ phpmyadmin.language }}.tar.gz dest=/home/{{ ansible_user }}/workspace/admin/db copy=no
   tags: phpmyadmin
 
 - name: link to htdocs
-  file: src=/home/{{ ansible_user }}/workspace/admin/db/phpMyAdmin-{{ phpmyadmin.install.version }}-{{ phpmyadmin.install.language }} dest=/home/{{ ansible_user }}/workspace/admin/db/htdocs state=link
+  file: src=/home/{{ ansible_user }}/workspace/admin/db/phpMyAdmin-{{ phpmyadmin.version }}-{{ phpmyadmin.language }} dest=/home/{{ ansible_user }}/workspace/admin/db/htdocs state=link
   tags: phpmyadmin
 
 - name: lookup config

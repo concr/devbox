@@ -11,7 +11,7 @@
 
 - name: configure server
   become: true
-  lineinfile: dest=/etc/exports line="/home/{{ ansible_user }} *(rw,all_squash,no_subtree_check,anonuid=1000,anongid=1000)" state=present
+  lineinfile: dest=/etc/exports line="/home/{{ ansible_user }}/workspace *(rw,all_squash,no_subtree_check,anonuid=1000,anongid=1000)" state=present
   notify:
     - restart nfs service
   tags: nfs

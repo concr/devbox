@@ -19,6 +19,11 @@
   file: src=/home/{{ ansible_user }}/workspace dest=/home/{{ ansible_user }}/var/www state=link
   tags: configure_user
 
+- name: copy .bashrc (root)
+  become: true
+  copy: src=bashrc_root dest=/root/.bashrc
+  tags: configure_user
+
 - name: copy .bashrc
   copy: src=bashrc dest=/home/{{ ansible_user }}/.bashrc
   tags: configure_user
@@ -27,12 +32,22 @@
   copy: src=bash_aliases dest=/home/{{ ansible_user }}/.bash_aliases
   tags: configure_user
 
+- name: copy .vimrc (root)
+  become: true
+  copy: src=vimrc dest=/root/.vimrc
+  tags: configure_user
+
 - name: copy .vimrc
   copy: src=vimrc dest=/home/{{ ansible_user }}/.vimrc
   tags: configure_user
 
 - name: copy .ssh/config
   copy: src=ssh-config dest=/home/{{ ansible_user }}/.ssh/config
+  tags: configure_user
+
+- name: setting /etc/environment
+  become: true
+  lineinfile: dest=/etc/environment line='LC_ALL="en_US.utf8"' state=present
   tags: configure_user
 
 - name: install createworkspace command

@@ -41,9 +41,9 @@
   become: true
   template: src=nginx_vhost.conf dest=/etc/nginx/conf.d/{{ item.key }}.conf
   vars:
-    port: "{{ item.value.ext }}"
-    fcgi: "{{ item.value.int }}"
-  with_dict: "{{ nginx }}"
+    port: "{{ item.value.http }}"
+    fcgi: "{{ item.value.fcgi }}"
+  with_dict: "{{ nginx_vhosts }}"
   notify:
     - restart nginx service
   tags:

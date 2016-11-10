@@ -18,9 +18,9 @@
     - restart hhvm service
   tags: hhvm
 
-- name: configure server
+- name: configure fcgi
   become: true
-  lineinfile: dest=/etc/hhvm/server.ini regexp="hhvm.server.port =.*" line="hhvm.server.port = 9001" state=present backrefs=yes
+  ini_file: dest=/etc/hhvm/server.ini section="" option="hhvm.server.port" value="{{ port }}"
   notify:
     - restart hhvm service
   tags: hhvm
