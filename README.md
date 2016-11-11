@@ -72,7 +72,7 @@ Add following lines to your local `/etc/hosts` for the default vhosts
 And do following in your `devbox`-VM, to start the php-fpm:
 
 <pre>
-phpbrew switch php-7.0.3 (or your prefered/installed version)
+phpbrew switch php-7.0.11 (or your prefered/installed version)
 phpbrew fpm start
 </pre>
 
@@ -80,7 +80,7 @@ phpbrew fpm start
 
 ### Configure webserver/fpm ports and PHP versions
 
-Have a look at the `ansible/devbox.yml` ...
+Have a look at the `provisioning/devbox.yml` ...
 
 ### SSH
 
