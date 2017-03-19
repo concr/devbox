@@ -1,0 +1,12 @@
+---
+- name: download rocketeer
+  get_url: url=http://rocketeer.autopergamene.eu/versions/rocketeer.phar dest=/home/{{ ansible_user }}/bin/rocketeer
+  tags: rocketeer
+
+- name: make rocketeer executable
+  file: path=/home/{{ ansible_user }}/bin/rocketeer mode=0755
+  tags: rocketeer
+
+- name: make roc symlink
+  file: src=/home/{{ ansible_user }}/bin/rocketeer dest=/home/{{ ansible_user }}/bin/roc state=link
+  tags: rocketeer

@@ -1,8 +1,0 @@
-ForwardAgent yes
-HashKnownHosts no
-
-Host ansible
-  HostName 10.10.10.4
-
-Host devbox
-  HostName 10.10.10.5

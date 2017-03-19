@@ -1,0 +1,12 @@
+---
+- name: install default packages
+  become: true
+  apt: name={{ item }} state=latest update_cache=true cache_valid_time=3600
+  with_items:
+    - libfontconfig
+  tags: phantomjs
+
+- name: install phantomjs
+  become: true
+  npm: name=phantomjs-prebuilt global=yes state=present
+  tags: phantomjs

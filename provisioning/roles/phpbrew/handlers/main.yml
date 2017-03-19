@@ -1,0 +1,5 @@
+---
+- name: restart phpbrew-fpm
+  shell: source /home/{{ ansible_user }}/.phpbrew/bashrc && phpbrew fpm restart
+  args:
+    executable: /bin/bash

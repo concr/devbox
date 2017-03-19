@@ -1,0 +1,5 @@
+---
+- name: install casperjs
+  become: true
+  npm: name=casperjs global=yes state=present
+  tags: phantomjs
